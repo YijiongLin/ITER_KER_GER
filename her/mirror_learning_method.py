@@ -7,8 +7,8 @@ import math
 PI = math.pi
 SYM_PLANE_Y = 0.75 * 2
 
-IF_CLEAR_BUFFER = True
-SINGLE_SUC_RATE_THRESHOLD = 1  # Set to none if donnot terminate KER
+IF_CLEAR_BUFFER = False
+SINGLE_SUC_RATE_THRESHOLD = 0  # Set to none if donnot terminate KER
 
 
 MAX_Z_THETA_PICK_PUSH = 0.1443
@@ -16,7 +16,8 @@ MAX_Z_THETA_SLIDE = 0.0697
 COUNT_UNVALID_OBJ = True
 unvalid_episode = False
 BOOL_OUTPUT_ONE_EPISODE_TRAJ = False # Generated one episode KER trajectories for plotting
-
+IER_TIMES = 3
+ERR_DISTANCE = 0.05
 class mirror_learning:
     def __init__(self,env_type,n_rsym):
         self.env_type = env_type

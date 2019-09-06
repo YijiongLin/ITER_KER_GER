@@ -5,14 +5,18 @@ import pickle
 
 from baselines.her.util import convert_episode_to_batch_major, store_args
 from ipdb import set_trace
-from baselines.her.mirror_learning_method import mirror_learning
+from baselines.her.mirror_learning_method import mirror_learning,IER_TIMES,ERR_DISTANCE
+# from baselines.her.imaginary import imaginary_learning
+
+
 
 class RolloutWorker:
 
     @store_args
-    def __init__(self,env_name, venv, policy, dims, logger, T, rollout_batch_size=1,
+    def __init__(self, env_name, venv, policy, dims, logger, T, rollout_batch_size=1,
                  exploit=False, use_target_net=False, compute_Q=False, noise_eps=0,
-                 random_eps=0, history_len=100, render=False, monitor=False,n_rsym=None, **kwargs):
+                 random_eps=0, history_len=100, render=False, monitor=False,n_rsym=None,if_use_imagine = False, IER_times = 0, err_distance=0.05,
+                  **kwargs):
         """Rollout worker generates experience by interacting with one or many environments.
 
         Args:
@@ -44,6 +48,8 @@ class RolloutWorker:
         self.clear_history()
         self.n_rsym = n_rsym
         self.mirror = mirror_learning(env_name,n_rsym)
+        # if if_use_imagine:
+        #     self.imagined_machine = imaginary_learning(IER_times=IER_times,err_disance=err_disance)
 
     def reset_all_rollouts(self):
         self.obs_dict = self.venv.reset()
@@ -224,6 +230,13 @@ class RolloutWorker:
         # ----------------Mirror Augmentation--------------------------- 
         original_ka_episodes = self.mirror.mirror_process(obs,acts,goals,achieved_goals)
         # ----------------end---------------------------
+
+        # ----------------Imaginary Augmentation--------------------------- 
+        # imagined_ka_episodes = self.imagined_machine.imagine_process(original_ka_episodes)
+        # ----------------end---------------------------
+
+
+
 
         # ----------------pack up as transition--------------------------- 
         for (obs,acts,goals,achieved_goals) in original_ka_episodes:

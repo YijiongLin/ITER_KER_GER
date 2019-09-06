@@ -65,7 +65,6 @@ def train(*, policy, rollout_worker, evaluator,
         for _ in range(n_cycles):
             # generate episodes
             episodes = rollout_worker.generate_rollouts(terminate_ker=terminate_ker_now)
-
             # with KER
             if (n_rsym_number !=0) and terminate_ker_now==False:
                 for episode in episodes:
@@ -134,6 +133,8 @@ def learn(*, network, env, total_timesteps,
     load_path=None,
     save_path=None,
     n_rsym = None,
+    if_use_imagine=False,
+    err_distance=0.05,
     **kwargs
 ):
 
@@ -178,7 +179,8 @@ def learn(*, network, env, total_timesteps,
         logger.warn()
 
     dims = config.configure_dims(params)
-    policy = config.configure_ddpg(dims=dims, params=params, clip_return=clip_return)
+    policy = config.configure_ddpg(dims=dims, params=params, clip_return=clip_return,
+                                    if_use_imagine=if_use_imagine,err_distance=err_distance,)
     if load_path is not None:
         tf_util.load_variables(load_path)
 
