@@ -8,7 +8,7 @@ PI = math.pi
 SYM_PLANE_Y = 0.75 * 2
 
 IF_CLEAR_BUFFER = False
-SINGLE_SUC_RATE_THRESHOLD = 0  # Set to none if donnot terminate KER
+SINGLE_SUC_RATE_THRESHOLD = None  # Set to none if donnot terminate KER
 
 
 MAX_Z_THETA_PICK_PUSH = 0.1443
