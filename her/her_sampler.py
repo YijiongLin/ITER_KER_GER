@@ -17,11 +17,13 @@ def make_sample_her_transitions(replay_strategy, replay_k, reward_fun):
         future_p = 1 - (1. / (1 + replay_k))
     else:  # 'replay_strategy' == 'none'
         future_p = 0
-    def _sample_her_transitions(episode_batch, batch_size_in_transitions,if_use_imagine=False,err_distance=0.05):
+    def _sample_her_transitions(episode_batch, batch_size_in_transitions, n_PER=0,err_distance=0.05):
         """episode_batch is {key: array(buffer_size x T x dim_key)}
         """
         T = episode_batch['u'].shape[1]
         rollout_batch_size = episode_batch['u'].shape[0]
+        # batch_size = 256
+
         batch_size = batch_size_in_transitions
 
         # Select which episodes and time steps to use.
@@ -41,30 +43,48 @@ def make_sample_her_transitions(replay_strategy, replay_k, reward_fun):
         # HER transitions (as defined by her_indexes). For the other transitions,
         # keep the original goal.
         future_ag = episode_batch['ag'][episode_idxs[her_indexes], future_t]
-
-        # set_trace()
-        if if_use_imagine:
-            imagined_machine = imaginary_learning(err_distance=err_distance)
-            future_ag = imagined_machine.process_goals(future_ag)
-
         transitions['g'][her_indexes] = future_ag.copy()
+
+        # create a new dict to store all the original, KER, HER, AGER data.
+        all_transitions = {key: transitions[key].copy()
+                        for key in episode_batch.keys()}
+
+
+        if n_PER:
+            # when n_PER != 0
+            for _ in range (n_PER):
+                PER_transitions = {key: transitions[key].copy()
+                        for key in episode_batch.keys()}
+                imagined_machine = imaginary_learning(err_distance=err_distance)
+                PER_indexes= np.array((range(0,batch_size)))
+                HER_KER_future_ag = PER_transitions['g'][PER_indexes].copy()
+                PER_future_g = imagined_machine.process_goals(HER_KER_future_ag.copy())
+                PER_transitions['g'][PER_indexes] = PER_future_g.copy()
+                for key in episode_batch.keys():
+                    all_transitions[key] = np.vstack([all_transitions[key], PER_transitions[key].copy()])
+
+            # when n_PER = 0
+        set_trace()
+        # After AGER, the minibatch size enlarged
+        batch_size = batch_size * (1+n_PER)
+        batch_size_in_transitions =batch_size
 
         # Reconstruct info dictionary for reward  computation.
         info = {}
-        for key, value in transitions.items():
+        for key, value in all_transitions.items():
             if key.startswith('info_'):
                 info[key.replace('info_', '')] = value
 
         # Re-compute reward since we may have substituted the goal.
-        reward_params = {k: transitions[k] for k in ['ag_2', 'g']}
+        reward_params = {k: all_transitions[k] for k in ['ag_2', 'g']}
         reward_params['info'] = info
-        transitions['r'] = reward_fun(**reward_params)
+        all_transitions['r'] = reward_fun(**reward_params)
 
-        transitions = {k: transitions[k].reshape(batch_size, *transitions[k].shape[1:])
-                       for k in transitions.keys()}
-
-        assert(transitions['u'].shape[0] == batch_size_in_transitions)
-
-        return transitions
+        all_transitions = {k: all_transitions[k].reshape(batch_size, *all_transitions[k].shape[1:])
+                       for k in all_transitions.keys()}
+    
+        assert(all_transitions['u'].shape[0] == batch_size_in_transitions)
+        set_trace()
+        return all_transitions
 
     return _sample_her_transitions

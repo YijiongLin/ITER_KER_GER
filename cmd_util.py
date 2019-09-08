@@ -173,6 +173,8 @@ def common_arg_parser():
     parser.add_argument('--log_path', help='Directory to save learning curve data.', default=None, type=str)
     parser.add_argument('--play', default=False, action='store_true')
     parser.add_argument('--n_rsym', type=int, default=0)
+    parser.add_argument('--before_PER_minibatch_size', type=int, default=None)
+    parser.add_argument('--n_PER', type=int, default=0)
     return parser
 
 def robotics_arg_parser():

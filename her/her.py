@@ -53,25 +53,26 @@ def train(*, policy, rollout_worker, evaluator,
     for epoch in range(n_epochs):
         # train
         
-        #Terminate KER during training or not 
-        if (single_suc_rate_threshold is not None) and (n_rsym_number !=0):
-            # int(xxx*10) to get rid of the float, and just enter once to terminate KER.
-            if (int(test_suc_rate*10) == int(single_suc_rate_threshold*10) ) and first_time_enter:
-                first_time_enter = False
-                if_clear_buffer = IF_CLEAR_BUFFER
-                terminate_ker_now = True
+        # #Terminate KER during training or not 
+        # if (single_suc_rate_threshold is not None) and (n_rsym_number !=0):
+        #     # int(xxx*10) to get rid of the float, and just enter once to terminate KER.
+        #     if (int(test_suc_rate*10) == int(single_suc_rate_threshold*10) ) and first_time_enter:
+        #         first_time_enter = False
+        #         if_clear_buffer = IF_CLEAR_BUFFER
+        #         terminate_ker_now = True
 
         rollout_worker.clear_history()
         for _ in range(n_cycles):
             # generate episodes
             episodes = rollout_worker.generate_rollouts(terminate_ker=terminate_ker_now)
             # with KER
-            if (n_rsym_number !=0) and terminate_ker_now==False:
+            # if (n_rsym_number !=0) and terminate_ker_now==False:
+            if (n_rsym_number !=0):
                 for episode in episodes:
                     policy.store_episode(episode)
             # without KER
             else:
-                policy.store_episode(episodes,if_clear_buffer_first = if_clear_buffer)
+                policy.store_episode(episodes)
                 # HER/DDPG do not need clear buffer
                 if_clear_buffer = False
             
@@ -132,8 +133,9 @@ def learn(*, network, env, total_timesteps,
     override_params=None,
     load_path=None,
     save_path=None,
-    n_rsym = None,
-    if_use_imagine=False,
+    n_rsym = 0,
+    before_PER_minibatch_size = None,
+    n_PER = 0,
     err_distance=0.05,
     **kwargs
 ):
@@ -149,6 +151,8 @@ def learn(*, network, env, total_timesteps,
 
     # Prepare params.
     params = config.DEFAULT_PARAMS
+    if before_PER_minibatch_size is not None and n_PER is not None :
+        params['batch_size'] = before_PER_minibatch_size * (n_PER+1)
     env_name = env.spec.id
     params['env_name'] = env_name
     params['replay_strategy'] = replay_strategy
@@ -180,7 +184,7 @@ def learn(*, network, env, total_timesteps,
 
     dims = config.configure_dims(params)
     policy = config.configure_ddpg(dims=dims, params=params, clip_return=clip_return,
-                                    if_use_imagine=if_use_imagine,err_distance=err_distance,)
+                                    n_PER=n_PER,err_distance=err_distance,)
     if load_path is not None:
         tf_util.load_variables(load_path)
 

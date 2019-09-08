@@ -150,7 +150,7 @@ def simple_goal_subtract(a, b):
     return a - b
 
 
-def configure_ddpg(dims, params, reuse=False, use_mpi=True, clip_return=True,if_use_imagine=False,err_distance=0.05):
+def configure_ddpg(dims, params, reuse=False, use_mpi=True, clip_return=True, n_PER=0,err_distance=0.05):
     sample_her_transitions = configure_her(params)
     # Extract relevant parameters.
     gamma = params['gamma']
@@ -180,7 +180,7 @@ def configure_ddpg(dims, params, reuse=False, use_mpi=True, clip_return=True,if_
     ddpg_params['info'] = {
         'env_name': params['env_name'],
     }
-    policy = DDPG(reuse=reuse, if_use_imagine=if_use_imagine,err_distance=err_distance, **ddpg_params, use_mpi=use_mpi)
+    policy = DDPG(reuse=reuse, n_PER=n_PER,err_distance=err_distance, **ddpg_params, use_mpi=use_mpi)
     return policy
 
 

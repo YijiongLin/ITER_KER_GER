@@ -73,13 +73,14 @@ def train(args, extra_args):
             alg_kwargs['network'] = get_default_network(env_type)
 
     print('Training {} on {}:{} with arguments \n{}'.format(args.alg, env_type, env_id, alg_kwargs))
-
     model = learn(
         env=env,
         seed=seed,
         total_timesteps=total_timesteps,
         save_path = args.save_path,
         n_rsym = args.n_rsym,
+        before_PER_minibatch_size = args.before_PER_minibatch_size,
+        n_PER = args.n_PER,
         **alg_kwargs
     )
 

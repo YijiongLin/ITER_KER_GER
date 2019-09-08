@@ -15,7 +15,7 @@ class RolloutWorker:
     @store_args
     def __init__(self, env_name, venv, policy, dims, logger, T, rollout_batch_size=1,
                  exploit=False, use_target_net=False, compute_Q=False, noise_eps=0,
-                 random_eps=0, history_len=100, render=False, monitor=False,n_rsym=None,if_use_imagine = False, IER_times = 0, err_distance=0.05,
+                 random_eps=0, history_len=100, render=False, monitor=False,n_rsym=0,n_PER = 0, IER_times = 0, err_distance=0.05,
                   **kwargs):
         """Rollout worker generates experience by interacting with one or many environments.
 
@@ -48,8 +48,7 @@ class RolloutWorker:
         self.clear_history()
         self.n_rsym = n_rsym
         self.mirror = mirror_learning(env_name,n_rsym)
-        # if if_use_imagine:
-        #     self.imagined_machine = imaginary_learning(IER_times=IER_times,err_disance=err_disance)
+
 
     def reset_all_rollouts(self):
         self.obs_dict = self.venv.reset()
@@ -58,7 +57,9 @@ class RolloutWorker:
         self.g = self.obs_dict['desired_goal']
 
     def generate_rollouts(self,terminate_ker=False):
-        if self.n_rsym and terminate_ker==False:
+        # if self.n_rsym and terminate_ker==False:
+        
+        if self.n_rsym:
             return self.generate_rollouts_ker()
         else :
             return self.generate_rollouts_vanilla()
@@ -67,6 +68,7 @@ class RolloutWorker:
         """Performs `rollout_batch_size` rollouts in parallel for time horizon `T` with the current
         policy acting on it accordingly.
         """
+        set_trace()
         self.reset_all_rollouts()
         # compute observations
         o = np.empty((self.rollout_batch_size, self.dims['o']), np.float32)  # observations
@@ -147,7 +149,7 @@ class RolloutWorker:
         if self.compute_Q:
             self.Q_history.append(np.mean(Qs))
         self.n_episodes += self.rollout_batch_size
-
+        
         return convert_episode_to_batch_major(episode)
 
     def generate_rollouts_ker(self):
