@@ -11,11 +11,11 @@ from baselines.common.mpi_moments import mpi_moments
 import baselines.her.experiment.config as config
 from baselines.her.rollout import RolloutWorker
 from ipdb import set_trace
-from tensorboardX import SummaryWriter
+# from tensorboardX import SummaryWriter
 from baselines.her.mirror_learning_method import SINGLE_SUC_RATE_THRESHOLD,IF_CLEAR_BUFFER
 
 
-writer = SummaryWriter()
+# writer = SummaryWriter()
 
 
 def mpi_average(value):
@@ -102,7 +102,7 @@ def train(*, policy, rollout_worker, evaluator,
 
         # save the policy if it's better than the previous ones
         success_rate = mpi_average(evaluator.current_success_rate())
-        writer.add_scalar(env_name+'_success_rate', success_rate, epoch)
+        # writer.add_scalar(env_name+'_success_rate', success_rate, epoch)
         # if rank == 0 and success_rate >= best_success_rate and save_path:
         #     best_success_rate = success_rate
         #     logger.info('New best success rate: {}. Saving policy to {} ...'.format(best_success_rate, best_policy_path))
@@ -119,7 +119,7 @@ def train(*, policy, rollout_worker, evaluator,
         MPI.COMM_WORLD.Bcast(root_uniform, root=0)
         if rank != 0:
             assert local_uniform[0] != root_uniform[0]
-    writer.close()
+    # writer.close()
     return policy
 
 
