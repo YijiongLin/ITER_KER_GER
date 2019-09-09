@@ -64,7 +64,6 @@ def make_sample_her_transitions(replay_strategy, replay_k, reward_fun):
                     all_transitions[key] = np.vstack([all_transitions[key], PER_transitions[key].copy()])
 
             # when n_PER = 0
-        set_trace()
         # After AGER, the minibatch size enlarged
         batch_size = batch_size * (1+n_PER)
         batch_size_in_transitions =batch_size
@@ -84,7 +83,6 @@ def make_sample_her_transitions(replay_strategy, replay_k, reward_fun):
                        for k in all_transitions.keys()}
     
         assert(all_transitions['u'].shape[0] == batch_size_in_transitions)
-        set_trace()
         return all_transitions
 
     return _sample_her_transitions
