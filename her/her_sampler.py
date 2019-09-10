@@ -17,7 +17,7 @@ def make_sample_her_transitions(replay_strategy, replay_k, reward_fun):
         future_p = 1 - (1. / (1 + replay_k))
     else:  # 'replay_strategy' == 'none'
         future_p = 0
-    def _sample_her_transitions(episode_batch, batch_size_in_transitions, n_PER=0,err_distance=0.05):
+    def _sample_her_transitions(episode_batch, batch_size_in_transitions,env_name=None, n_PER=0,err_distance=0.05):
         """episode_batch is {key: array(buffer_size x T x dim_key)}
         """
         T = episode_batch['u'].shape[1]
@@ -55,7 +55,7 @@ def make_sample_her_transitions(replay_strategy, replay_k, reward_fun):
             for _ in range (n_PER):
                 PER_transitions = {key: transitions[key].copy()
                         for key in episode_batch.keys()}
-                imagined_machine = imaginary_learning(err_distance=err_distance)
+                imagined_machine = imaginary_learning(env_name = env_name,err_distance=err_distance)
                 PER_indexes= np.array((range(0,batch_size)))
                 HER_KER_future_ag = PER_transitions['g'][PER_indexes].copy()
                 PER_future_g = imagined_machine.process_goals(HER_KER_future_ag.copy())

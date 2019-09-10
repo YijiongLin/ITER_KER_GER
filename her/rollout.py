@@ -5,7 +5,7 @@ import pickle
 
 from baselines.her.util import convert_episode_to_batch_major, store_args
 from ipdb import set_trace
-from baselines.her.mirror_learning_method import mirror_learning,IER_TIMES,ERR_DISTANCE
+from baselines.her.mirror_learning_method import mirror_learning
 # from baselines.her.imaginary import imaginary_learning
 
 
@@ -15,7 +15,7 @@ class RolloutWorker:
     @store_args
     def __init__(self, env_name, venv, policy, dims, logger, T, rollout_batch_size=1,
                  exploit=False, use_target_net=False, compute_Q=False, noise_eps=0,
-                 random_eps=0, history_len=100, render=False, monitor=False,n_rsym=0,n_PER = 0, IER_times = 0, err_distance=0.05,
+                 random_eps=0, history_len=100, render=False, monitor=False,n_rsym=0,
                   **kwargs):
         """Rollout worker generates experience by interacting with one or many environments.
 

@@ -7,10 +7,9 @@ from math import pi,cos,sin,acos
 
 
 class imaginary_learning:
-    def __init__(self,IER_times=1,err_distance = 0.05):
+    def __init__(self,env_name=None,err_distance = 0.05):
         self.err_distance = err_distance
-        self.IER_times = IER_times
-    
+        self.env_name = env_name
     def imagine_process_for_episodes_list(self,episodes):
         for _ in range(self.IER_times):
             xs,ys,zs = self.generate_random_point_in_sphere(len(episodes))
@@ -67,13 +66,23 @@ class imaginary_learning:
         xs =[]
         ys = []
         zs = []
-
-        for a1,a2,r in zip(angle1s,agnle2s,rs):
-            
-            x=r*cos(a1)*sin(a2) * self.err_distance
-            y=r*sin(a1)*sin(a2) * self.err_distance
-            z=r*cos(a2) * self.err_distance
-            xs.append(x)
-            ys.append(y)
-            zs.append(z)
+        
+        if self.env_name == "FetchSlide-v1" or self.env_name == "BaxterSlide-v1":
+            for a1,a2,r in zip(angle1s,agnle2s,rs):
+                x=r*cos(a1)*sin(a2) * self.err_distance
+                y=r*sin(a1)*sin(a2) * self.err_distance
+                z= 0
+                xs.append(x)
+                ys.append(y)
+                zs.append(z)
+        elif self.env_name == "FetchPickAndPlace-v1" or self.env_name == "FetchPush-v1" or self.env_name == "BaxterPickAndPlace-v1" or self.env_name == "BaxterPush-v1":
+            for a1,a2,r in zip(angle1s,agnle2s,rs):
+                x=r*cos(a1)*sin(a2) * self.err_distance
+                y=r*sin(a1)*sin(a2) * self.err_distance
+                z=r*cos(a2) * self.err_distance
+                xs.append(x)
+                ys.append(y)
+                zs.append(z)
+        else:
+            assert("No such env :",self.env_name)
         return xs,ys,zs

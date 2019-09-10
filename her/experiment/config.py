@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import gym
-
+from ipdb import set_trace
 from baselines import logger
 from baselines.her.ddpg import DDPG
 from baselines.her.her_sampler import make_sample_her_transitions
@@ -150,7 +150,7 @@ def simple_goal_subtract(a, b):
     return a - b
 
 
-def configure_ddpg(dims, params, reuse=False, use_mpi=True, clip_return=True, n_PER=0,err_distance=0.05):
+def configure_ddpg(dims, params, reuse=False, use_mpi=True, clip_return=True, n_PER=0,err_distance=0.05,n_rsym=0, env_name = None):
     sample_her_transitions = configure_her(params)
     # Extract relevant parameters.
     gamma = params['gamma']
@@ -180,7 +180,7 @@ def configure_ddpg(dims, params, reuse=False, use_mpi=True, clip_return=True, n_
     ddpg_params['info'] = {
         'env_name': params['env_name'],
     }
-    policy = DDPG(reuse=reuse, n_PER=n_PER,err_distance=err_distance, **ddpg_params, use_mpi=use_mpi)
+    policy = DDPG(reuse=reuse,n_rsym=n_rsym, env_name = env_name, n_PER=n_PER,err_distance=err_distance, **ddpg_params, use_mpi=use_mpi)
     return policy
 
 

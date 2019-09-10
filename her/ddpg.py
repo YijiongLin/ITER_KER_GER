@@ -25,7 +25,7 @@ class DDPG(object):
                  Q_lr, pi_lr, norm_eps, norm_clip, max_u, action_l2, clip_obs, scope, T,
                  rollout_batch_size, subtract_goals, relative_goals, clip_pos_returns, clip_return,
                  bc_loss, q_filter, num_demo, demo_batch_size, prm_loss_weight, aux_loss_weight,
-                 sample_transitions, gamma, reuse=False,n_PER=0,err_distance=0.05,n_rsym=0, **kwargs):
+                 sample_transitions, gamma, reuse=False,n_PER=0,err_distance=0.05,n_rsym=0,env_name=None, **kwargs):
         """Implementation of DDPG that is used in combination with Hindsight Experience Replay (HER).
             Added functionality to use demonstrations for training to Overcome exploration problem.
 
@@ -108,7 +108,7 @@ class DDPG(object):
         self.n_PER= n_PER
         self.err_distance = err_distance
         self.n_rsym = n_rsym
-
+        self.env_name = env_name
     def _random_action(self, n):
         return np.random.uniform(low=-self.max_u, high=self.max_u, size=(n, self.dimu))
 
@@ -202,7 +202,7 @@ class DDPG(object):
                 episode['o_2'] = episode['o'][:, 1:, :]
                 episode['ag_2'] = episode['ag'][:, 1:, :]
                 num_normalizing_transitions = transitions_in_episode_batch(episode)
-                transitions = self.sample_transitions(episode, num_normalizing_transitions,n_PER=self.n_PER,err_distance=self.err_distance)
+                transitions = self.sample_transitions(episode, num_normalizing_transitions,env_name = self.env_name,n_PER=self.n_PER,err_distance=self.err_distance)
 
                 o, g, ag = transitions['o'], transitions['g'], transitions['ag']
                 transitions['o'], transitions['g'] = self._preprocess_og(o, ag, g)
@@ -217,7 +217,7 @@ class DDPG(object):
 
         logger.info("Demo buffer size: ", DEMO_BUFFER.get_current_size()) #print out the demonstration buffer size
 
-    def store_episode(self, episode_batch, update_stats=True, if_clear_buffer_first=False):
+    def store_episode(self, episode_batch,update_stats=True, if_clear_buffer_first=False):
         """
         episode_batch: array of batch_size x (T or T+1) x dim_key
                        'o' is of size T+1, others are of size T
@@ -226,13 +226,12 @@ class DDPG(object):
         #     self.buffer.clear_buffer()
         self.buffer.store_episode(episode_batch)
 
-
         if update_stats:
             # add transitions to normalizer
             episode_batch['o_2'] = episode_batch['o'][:, 1:, :]
             episode_batch['ag_2'] = episode_batch['ag'][:, 1:, :]
             num_normalizing_transitions = transitions_in_episode_batch(episode_batch)
-            transitions = self.sample_transitions(episode_batch, num_normalizing_transitions,
+            transitions = self.sample_transitions(episode_batch, num_normalizing_transitions,env_name = self.env_name,
                                                      n_PER=self.n_PER,
                                                     err_distance=self.err_distance)
 
@@ -281,7 +280,7 @@ class DDPG(object):
             minibatch_for_KER  = int(self.batch_size/(self.n_PER+1))
             # minibatch_for_KER = 256, self.batch_size = 512, self.n_PER =1
             # minibatch_for_KER = 256, self.batch_size = 1024, self.n_PER =3
-            transitions = self.buffer.sample(minibatch_for_KER, n_PER=self.n_PER,err_distance=self.err_distance) #otherwise only sample from primary buffer
+            transitions = self.buffer.sample(minibatch_for_KER,env_name=self.env_name, n_PER=self.n_PER,err_distance=self.err_distance) #otherwise only sample from primary buffer
 
         o, o_2, g = transitions['o'], transitions['o_2'], transitions['g']
         ag, ag_2 = transitions['ag'], transitions['ag_2']
