@@ -10,21 +10,6 @@ class imaginary_learning:
     def __init__(self,env_name=None,err_distance = 0.05):
         self.err_distance = err_distance
         self.env_name = env_name
-    def imagine_process_for_episodes_list(self,episodes):
-        for _ in range(self.IER_times):
-            xs,ys,zs = self.generate_random_point_in_sphere(len(episodes))
-
-            for (obs, acts, goals, achieved_goals) in episodes:
-                imagined_goals_list = []
-                for goal,offset_x,offset_y,offset_z in zip(goals,xs,ys,zs):
-                    imagined_goal = goal + np.ndarray([offset_x,offset_y,offset_z])
-                    imagined_goals_list.append(imagined_goal.copy())
-                tmp_episodes.append([obs, acts, imagined_goal, achieved_goals])
-
-        for tmp_episode in tmp_episodes:
-            episodes.append(tmp_episode)
-
-        return episodes
 
     def process_goals(self,goals):
         goals_len = goals.shape[0]
@@ -32,25 +17,18 @@ class imaginary_learning:
 
         for i,(offset_x,offset_y,offset_z) in enumerate(zip(xs,ys,zs)):
             goals[i] = goals[i] + np.array([offset_x,offset_y,offset_z])
+        if  self.env_name == "FetchSlide-v1" or self.env_name == "BaxterSlide-v1":
+            for aug_goal in goals:
+                if aug_goal[1]> 1.2:
+                    aug_goal[1] = 1.2
+                elif aug_goal[1]<0.3:
+                    aug_goal[1] = 0.3
+
+                if aug_goal[0] > 1.945:
+                    aug_goal[0] = 1.945
+                elif aug_goal[0] < 0.695:
+                    aug_goal[0] = 0.695
         return goals.copy()
-
-
-    # def imagine_process_for_transitions(self,transitions):
-    #     for _ in range(self.IER_times):
-    #         xs,ys,zs = self.generate_random_point_in_sphere(len(episodes))
-
-    #         for (obs, acts, goals, achieved_goals) in episodes:
-    #             imagined_goals_list = []
-    #             for goal,offset_x,offset_y,offset_z in zip(goals,xs,ys,zs):
-    #                 imagined_goal = goal + np.ndarray([offset_x,offset_y,offset_z])
-    #                 imagined_goals_list.append(imagined_goal.copy())
-    #             tmp_episodes.append([obs, acts, imagined_goal, achieved_goals])
-
-    #     for tmp_episode in tmp_episodes:
-    #         episodes.append(tmp_episode)
-
-    #     return transitions
-
         
     def generate_random_point_in_sphere(self,goals_len):
         angle1s=np.random.random(size=goals_len)*2*pi
