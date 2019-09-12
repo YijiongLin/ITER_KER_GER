@@ -277,9 +277,7 @@ class DDPG(object):
                     rolloutV.append(v.tolist())
                 transitions[k] = np.array(rolloutV)
         else:
-            minibatch_for_KER  = int(self.batch_size/(self.n_PER+1))
-            # minibatch_for_KER = 256, self.batch_size = 512, self.n_PER =1
-            # minibatch_for_KER = 256, self.batch_size = 1024, self.n_PER =3
+            minibatch_for_KER  = int(self.batch_size/self.n_PER)
             transitions = self.buffer.sample(minibatch_for_KER,env_name=self.env_name, n_PER=self.n_PER,err_distance=self.err_distance) #otherwise only sample from primary buffer
 
         o, o_2, g = transitions['o'], transitions['o_2'], transitions['g']

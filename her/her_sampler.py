@@ -31,7 +31,8 @@ def make_sample_her_transitions(replay_strategy, replay_k, reward_fun):
         t_samples = np.random.randint(T, size=batch_size)
         transitions = {key: episode_batch[key][episode_idxs, t_samples].copy()
                        for key in episode_batch.keys()}
-
+        original_transitions = {key: transitions[key].copy()
+                        for key in episode_batch.keys()}
         # Select future time indexes proportional with probability future_p. These
         # will be used for HER replay by substituting in future goals.
         her_indexes = np.where(np.random.uniform(size=batch_size) < future_p)
@@ -43,29 +44,30 @@ def make_sample_her_transitions(replay_strategy, replay_k, reward_fun):
         # HER transitions (as defined by her_indexes). For the other transitions,
         # keep the original goal.
         future_ag = episode_batch['ag'][episode_idxs[her_indexes], future_t]
-        transitions['g'][her_indexes] = future_ag.copy()
-
+        imagined_machine = imaginary_learning(env_name = env_name,err_distance=err_distance)
+        PER_future_g = imagined_machine.process_goals(future_ag.copy())
+        transitions['g'][her_indexes] = PER_future_g.copy()
         # create a new dict to store all the original, KER, HER, AGER data.
         all_transitions = {key: transitions[key].copy()
                         for key in episode_batch.keys()}
 
 
-        if n_PER:
+        if n_PER>1:
             # when n_PER != 0
-            for _ in range (n_PER):
-                PER_transitions = {key: transitions[key].copy()
+            for _ in range (n_PER-1):
+                PER_transitions = {key: original_transitions[key].copy()
                         for key in episode_batch.keys()}
-                imagined_machine = imaginary_learning(env_name = env_name,err_distance=err_distance)
-                PER_indexes= np.array((range(0,batch_size)))
+                PER_indexes = np.where(np.random.uniform(size=batch_size) < future_p)
+                # PER_indexes= np.array((range(0,batch_size)))
                 HER_KER_future_ag = PER_transitions['g'][PER_indexes].copy()
                 PER_future_g = imagined_machine.process_goals(HER_KER_future_ag.copy())
                 PER_transitions['g'][PER_indexes] = PER_future_g.copy()
                 for key in episode_batch.keys():
                     all_transitions[key] = np.vstack([all_transitions[key], PER_transitions[key].copy()])
-
             # when n_PER = 0
         # After AGER, the minibatch size enlarged
-        batch_size = batch_size * (1+n_PER)
+        batch_size = batch_size * n_PER
+        set_trace()
         batch_size_in_transitions =batch_size
 
         # Reconstruct info dictionary for reward  computation.

@@ -152,7 +152,7 @@ def learn(*, network, env, total_timesteps,
     # Prepare params.
     params = config.DEFAULT_PARAMS
     if before_PER_minibatch_size is not None and n_PER is not None :
-        params['batch_size'] = before_PER_minibatch_size * (n_PER+1)
+        params['batch_size'] = before_PER_minibatch_size * n_PER
     env_name = env.spec.id
     params['env_name'] = env_name
     params['replay_strategy'] = replay_strategy
