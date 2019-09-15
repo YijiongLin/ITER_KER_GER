@@ -1,0 +1,106 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+
+        {
+            "name": "Python: FetchPick",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": true,
+            "pythonPath": "${config:python.pythonPath}",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}",
+            "env": {},
+            "envFile": "${workspaceFolder}/.env",
+            "args": [
+                "--alg=her",
+                "--env=FetchPickAndPlace-v1",
+                "--num_timesteps=5000"
+
+            ]
+        },
+
+        {
+            "name": "Python: FetchPush",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": true,
+            "pythonPath": "${config:python.pythonPath}",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}",
+            "env": {},
+            "envFile": "${workspaceFolder}/.env",
+            "args": [
+                "--alg=her",
+                "--env=FetchPush-v1",
+                "--num_timesteps=5000"
+
+            ]
+        },
+
+        {
+            "name": "Python: BaxterPush",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": true,
+            "pythonPath": "${config:python.pythonPath}",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}",
+            "env": {},
+            "envFile": "${workspaceFolder}/.env",
+            "args": [
+                "--alg=her",
+                "--env=BaxterPush-v1",
+                "--num_timesteps=5000",
+                "--n_rsym=2",
+                "--n_PER=2"
+
+            ]
+        },
+
+        // {
+        //     "name": "Python: HalfCheetah-v2",
+        //     "type": "python",
+        //     "request": "launch",
+        //     "stopOnEntry": true,
+        //     "pythonPath": "${config:python.pythonPath}",
+        //     "program": "${file}",
+        //     "cwd": "${workspaceFolder}",
+        //     "env": {},
+        //     "envFile": "${workspaceFolder}/.env",
+            // "args": [
+            //     "--alg=her",
+            //     "--env=FetchReach-v1",
+            //     "--num_timesteps=5000"
+            // ]
+        // },
+
+        // {
+        //     "name": "Python: hpenfac-ddpg+her",
+        //     "type": "python",
+        //     "request": "launch",
+        //     "stopOnEntry": true,
+        //     "pythonPath": "${config:python.pythonPath}",
+        //     "program": "${file}",
+        //     "cwd": "${workspaceFolder}",
+        //     "env": {},
+        //     "envFile": "${workspaceFolder}/.env",
+        //     "args": [
+        //         "--goal-based",
+        //         "--config='/home/jim/ddrl/gym/config.ini'",
+        //         // "--capture"
+        //     ]
+        // }
+    ]
+}
