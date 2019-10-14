@@ -1,5 +1,7 @@
 # ITER_KER_GER
+
 ## Description
+
 This repo refers to the paper [*Invariant Transform Experience Replay*](https://arxiv.org/abs/1909.10707#), which had been submitted to ICRA-2020. 
 
 Deep reinforcement learning (DRL) is a promising approach for adaptive robot control, but its current application to robotics is currently hindered by high sample requirements. We propose two novel data augmentation techniques for DRL based on invariant transformations of trajectories in order to reuse more efficiently observed interaction. The first one called Kaleidoscope Experience Replay exploits reflectional symmetries, while the second called Goal-augmented Experi- ence Replay takes advantage of lax goal definitions. In the Fetch tasks from OpenAI Gym, our experimental results show a large increase in learning speed
@@ -22,6 +24,7 @@ Finally, please copy the files held in folder `ITER_KER_GER/her` and paste into 
 copy -rf her ~/baselines/baselines/
 ```
 ## Usage
+
 To reproduce the results in our paper, please run :
 ```
 python -m baselines.run --alg=her --env=FetchPickAndPlace-v1 --num_timesteps=1e6 --n_cycles=100 --save_path=/home/user/policies/her/iter --log_path=/home/user/log_data/her/iter --before_PER_minibatch_size=256 --n_rsym=8 --n_PER=4
@@ -36,9 +39,20 @@ options include:
 * `--log_path`: To specify the log file saved path.
 * `--save_path`: To specify the policy parameters saved path.
 
+## Loading and visualizing models
+
+This [page](https://github.com/openai/baselines#saving-loading-and-visualizing-models) from OpenAI Baselines has a good indicaition on loading and visualizing models.
 
 ## More Information
+
 For more information please check:
 1. [Website](http://www.juanrojas.net/ker/)
 2. [Paper](https://arxiv.org/abs/1909.10707#)
 3. [Youtube](https://www.youtube.com/watch?v=qM3QEeqHTdk&feature=youtu.be), [Youku](https://v.youku.com/v_show/id_XNDM3NDY0NzM0MA==.html?spm=a2hzp.8244740.0.0)
+
+## Credits
+
+`ITER_KER_GER` is maintained by the BIRL Intelligent Manipulation team. Contributors include:
+
+- [Yijiong Lin (Bourne)](2111701025@mail2.gdut.edu.cn)
+- [Jiancong Huang (Jim)](374729746@qq.com)
