@@ -54,5 +54,5 @@ For more information please check:
 
 `ITER_KER_GER` is maintained by the BIRL Intelligent Manipulation team. Contributors include:
 
-- [Yijiong Lin (Bourne)](2111701025@mail2.gdut.edu.cn)
-- [Jiancong Huang (Jim)](374729746@qq.com)
+- Yijiong Lin (Bourne), 2111701025@mail2.gdut.edu.cn
+- Jiancong Huang (Jim), 374729746@qq.com
