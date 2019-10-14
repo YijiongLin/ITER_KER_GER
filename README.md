@@ -1,18 +1,16 @@
 # ITER_KER_GER
+## Description
 This repo refers to the paper [*Invariant Transform Experience Replay*](https://arxiv.org/abs/1909.10707#), which had been submitted to ICRA-2020. 
 
 And this repo is built on top of [OpenAI Baselines](https://github.com/openai/baselines/tree/master/baselines) and [OpenAI Gym](https://github.com/openai/gym). 
 
 This implementation requires the installation of the [OpenAI Baselines](https://github.com/openai/baselines/tree/master/baselines) module. After the installation, please download all the files in folder "her" of this repo and then copy them to override the one in baselines/her.
 
-
+## Usage
 To reproduce the results in our paper, please run :
-
 ```
 python -m baselines.run --alg=her --env=FetchPickAndPlace-v1 --num_timesteps=1e6 --n_cycles=100 --save_path=/home/user/policies/her/iter --log_path=/home/bourne/log_data/her/iter --before_PER_minibatch_size=256 --n_rsym=8 --n_PER=4
 ```
-
-Usage
 
 options include:
 * --num_cpu: Number of cpus. The paper uses 19 cpus (as in the [original paper](https://arxiv.org/abs/1802.09464) presenting this HER implementation. Please note that as the HER's author said, running the code with different cpus is NOT equivalent, for more info please check (here)[https://github.com/openai/baselines/issues/314].
@@ -22,7 +20,7 @@ options include:
 * --n_PER: To specify the hyperparameter of GER.
 
 
-
+## More Information
 For more informations please check:
 1. [Website](http://www.juanrojas.net/ker/)
 2. [Paper](https://arxiv.org/abs/1909.10707#)
