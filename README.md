@@ -9,17 +9,13 @@ And this repo is built on top of [OpenAI Baselines](https://github.com/openai/ba
 ## Installation
 
 This implementation requires the installation of the [OpenAI Baselines](https://github.com/openai/baselines/tree/master/baselines) module. 
-After the installation, please create a new folder for this repo.
+After the installation, please create a new folder for this repo and go inside.
 ```
-mkdir ITER
-```
-Then cd to the new folder:
-```
-cd ITER
+mkdir ITER_KER_GER && cd $_
 ```
 Download all the codes held in this repo.
 ```
-git@github.com:birlrobotics/ITER_KER_GER.git
+git clone git@github.com:birlrobotics/ITER_KER_GER.git
 ```
 Finally, please copy the files held in folder `ITER_KER_GER/her` and paste into `baselines/baselines/`.
 ```
@@ -28,15 +24,17 @@ copy -rf her ~/baselines/baselines/
 ## Usage
 To reproduce the results in our paper, please run :
 ```
-python -m baselines.run --alg=her --env=FetchPickAndPlace-v1 --num_timesteps=1e6 --n_cycles=100 --save_path=/home/user/policies/her/iter --log_path=/home/bourne/log_data/her/iter --before_PER_minibatch_size=256 --n_rsym=8 --n_PER=4
+python -m baselines.run --alg=her --env=FetchPickAndPlace-v1 --num_timesteps=1e6 --n_cycles=100 --save_path=/home/user/policies/her/iter --log_path=/home/user/log_data/her/iter --before_PER_minibatch_size=256 --n_rsym=8 --n_PER=4
 ```
 
 options include:
-* `--num_cpu`: Number of cpus. The paper uses 19 cpus (as in the [original paper](https://arxiv.org/abs/1802.09464) presenting this HER implementation. Please note that as the HER's author said, running the code with different cpus is NOT equivalent, for more info please check (here)[https://github.com/openai/baselines/issues/314].
-* `--env`: string of the gym_flowers env. Possible choices are *FetchPickAndPlace-v1, FetchSlide-v1, FetchPush-v1*. (There will be more choices on Baxter robot in the near future, please keep watching on our repo :). )
+* `--num_cpu`: Number of workers(threads/cpus). The results in our paper just used 1 worker in order to show the significant improvements in learning speed. The [original HER paper](https://arxiv.org/abs/1802.09464) presents this HER implementation. (**Please note that as the HER's author said, running the code with different cpus is NOT equivalent. For more information about this issue, please check [here](https://github.com/openai/baselines/issues/314).**)
+* `--env`: To specify the experimental environment in each run. Possible choices are *FetchPickAndPlace-v1, FetchSlide-v1, FetchPush-v1*. (There will be more choices on Baxter robot in the near future, please keep watching on our repo :). )
 * `--before_PER_minibatch_size`: To specify the original minibatch size.
-* `--n_rsym`: To specify how many reflectional planes you would like to augment the samples. The additional number of symmetrical samples is $2*n_rsym-1$.
-* `--n_PER`: To specify the hyperparameter of GER.
+* `--n_rsym`: To specify the hyperparameter of KER. More specifically, it is to specify how many reflectional planes you would like to augment the samples. For more information, please checkout our [Paper](https://arxiv.org/abs/1909.10707#).
+* `--n_PER`: To specify the hyperparameter of GER. More specifically, it is to specify how many transitions' goals you would like to augment. For more information, please checkout our [Paper](https://arxiv.org/abs/1909.10707#).
+* `--log_path`: To specify the log file saved path.
+* `--save_path`: To specify the policy parameters saved path.
 
 
 ## More Information
