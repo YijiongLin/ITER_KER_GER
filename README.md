@@ -6,7 +6,18 @@ Deep reinforcement learning (DRL) is a promising approach for adaptive robot con
 
 And this repo is built on top of [OpenAI Baselines](https://github.com/openai/baselines/tree/master/baselines) and [OpenAI Gym](https://github.com/openai/gym). 
 
-This implementation requires the installation of the [OpenAI Baselines](https://github.com/openai/baselines/tree/master/baselines) module. After the installation, please download all the files in folder "her" of this repo and then copy them to override the one in baselines/her.
+## Installation
+
+This implementation requires the installation of the [OpenAI Baselines](https://github.com/openai/baselines/tree/master/baselines) module. After the installation, please download all the files in folder "her" of this repo and then copy them to overwrite the one in baselines/her.
+```
+mkdir ITER
+```
+```
+cd ITER
+```
+```
+git@github.com:birlrobotics/ITER_KER_GER.git
+```
 
 ## Usage
 To reproduce the results in our paper, please run :
