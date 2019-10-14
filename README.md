@@ -21,7 +21,7 @@ options include:
 
 
 ## More Information
-For more informations please check:
+For more information please check:
 1. [Website](http://www.juanrojas.net/ker/)
 2. [Paper](https://arxiv.org/abs/1909.10707#)
 3. [Youtube](https://www.youtube.com/watch?v=qM3QEeqHTdk&feature=youtu.be), [Youku](https://v.youku.com/v_show/id_XNDM3NDY0NzM0MA==.html?spm=a2hzp.8244740.0.0)
