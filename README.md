@@ -8,17 +8,23 @@ And this repo is built on top of [OpenAI Baselines](https://github.com/openai/ba
 
 ## Installation
 
-This implementation requires the installation of the [OpenAI Baselines](https://github.com/openai/baselines/tree/master/baselines) module. After the installation, please download all the files in folder "her" of this repo and then copy them to overwrite the one in baselines/her.
+This implementation requires the installation of the [OpenAI Baselines](https://github.com/openai/baselines/tree/master/baselines) module. 
+After the installation, please create a new folder for this repo.
 ```
 mkdir ITER
 ```
+Then cd to the new folder:
 ```
 cd ITER
 ```
+Download all the codes held in this repo.
 ```
 git@github.com:birlrobotics/ITER_KER_GER.git
 ```
-
+Finally, please copy the files held in folder `ITER_KER_GER/her` and paste into `baselines/baselines/`.
+```
+copy -rf her ~/baselines/baselines/
+```
 ## Usage
 To reproduce the results in our paper, please run :
 ```
